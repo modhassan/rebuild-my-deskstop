@@ -1,0 +1,78 @@
+---
+- name: Check If java is already installed or not
+  shell: "java -version 2>&1 | grep version | awk '{print $3}' | sed 's/\"//g'"
+  register: java_installed
+
+- name: Installed java version
+  debug: "msg={{java_installed.stdout}}"
+
+- block:
+    - name: Install unzip on RedHat based distro
+      import_tasks: unzip-install-on-redhat.yml
+      when: ansible_os_family == 'Redhat'
+    - name: Install unzip on Debian based distro
+      import_tasks: unzip-install-on-debian.yml
+      when: ansible_os_family == 'Debian'
+
+    - name: Download OpenJDK
+      import_tasks: fetch-openjdk.yml
+      when: java_vendor == "openjdk"
+
+    - name: Download OracleJDK
+      import_tasks: fetch-oraclejdk.yml
+      when: java_vendor == "oracle"
+
+    - name: make sure java_home directory exist
+      file:
+        path: "{{java_home}}"
+        state: directory
+        owner: root
+        group: root
+
+    - name: Unpack archive
+      unarchive:
+        src: "{{java_archive}}"
+        dest: "{{java_home}}"
+        remote_src: yes
+        owner: root
+        group: root
+        extra_opts: [--strip-components=1]
+
+    - name: Make Java available for RedHat based distroy
+      command: 'alternatives --install "/usr/bin/java" "java" "{{java_home}}/bin/java" 2000'
+      when: ansible_os_family == 'Redhat'
+    - name: Make Java available for Debian based distroy
+      command: 'update-alternatives --install "/usr/bin/java" "java" "{{java_home}}/bin/java" 2000'
+      when: ansible_os_family == 'Debian'
+
+    - name: Set/Configure JAVA_HOME in environment variables
+      shell: "echo 'export JAVA_HOME={{java_home}}\n export PATH=$JAVA_HOME/bin:$PATH' > {{java_env_file}}"
+      args:
+        executable: /bin/bash
+
+    - name: Exports/Run java env file for make JAVA_HOME available globally
+      shell: "source {{java_env_file}}"
+      args:
+        executable: /bin/bash
+
+    - name: Clean up
+      file: state=absent path={{java_archive}}
+
+  when: java_installed.stdout == "" and uninstall is undefined
+
+- block:
+    - name: remove java alternatives for RedHat based distro
+      command: 'alternatives --remove "/usr/bin/java" "java" "{{java_home}}/bin/java"'
+      when: ansible_os_family == 'Redhat'
+    - name: remove java alternatives for Debian based distro
+      command: 'update-alternatives --remove "java" "/usr/bin/java"'
+      when: ansible_os_family == 'Debian'
+    - name: make sure java_env_file does not exist
+      file:
+        path: "{{java_env_file}}"
+        state: absent
+    - name: make sure JAVA_HOME does not exist
+      file:
+        path: "{{java_home}}"
+        state: absent
+  when: uninstall is defined and uninstall

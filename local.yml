@@ -1,0 +1,9 @@
+- hosts: localhost
+  connection: local
+  become: true
+  roles:
+    - { role: git }
+    - { role: java }
+    - { role: virtualbox }
+    - { role: docker }
+    - { role: google-chrome }

@@ -1,0 +1,12 @@
+---
+java_vendor: oracle
+openjdk_download_url: https://download.java.net/java/GA/jdk11/9/GPL/openjdk-11.0.2_linux-x64_bin.tar.gz
+#oraclejdk_download_url: https://download.oracle.com/otn-pub/java/jdk/11.0.10%2B8/020c4a6d33b74f6a9d2bc6fbf189da81/jdk-11.0.10_linux-x64_bin.tar.gz
+oraclejdk_download_url: https://s3-eu-west-1.amazonaws.com/secrets.vizrtsaas.com/static/jdk/jdk-8u281-linux-x64.tar.gz
+download_folder: /tmp
+java_archive: "{{download_folder}}/jdk.tar.gz"
+java_env_file: "/etc/profile.d/java.sh"
+java_home: /usr/lib/jvm/jdk
+#uninstall: yes
+jdk_major_version: 11
+

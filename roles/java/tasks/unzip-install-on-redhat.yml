@@ -1,0 +1,16 @@
+---
+- name: make sure unzip installed on RedHat based distro
+  yum:
+    name: unzip
+    state: present
+    update_cache: yes
+- name: make sure gzip installed on RedHat based distro
+  yum:
+    name: gzip
+    state: present
+    update_cache: yes
+- name: make sure gzip installed on RedHat based distro
+  yum:
+    name: tar
+    state: present
+    update_cache: yes

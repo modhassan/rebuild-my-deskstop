@@ -1,0 +1,7 @@
+---
+- name: Install jdk on RedHat based distro
+  import_tasks: jdk-install-on-redhat.yml
+  when: ansible_os_family == 'Redhat'
+- name: Install jdk on Debian based distro
+  import_tasks: jdk-install-on-debian.yml
+  when: ansible_os_family == 'Debian'

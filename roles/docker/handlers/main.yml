@@ -1,0 +1,13 @@
+---
+- name: make sure docker started and enabled
+  listen: install docker
+  service:
+    name: docker
+    state: started
+    enabled: yes
+
+- name: Add user to docker group
+  listen: install docker
+  user:
+    name: escenic
+    group: docker

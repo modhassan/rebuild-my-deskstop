@@ -1,0 +1,16 @@
+---
+- name: make sure unzip installed on debian based distro
+  apt:
+    name: unzip
+    state: present
+    update_cache: yes
+- name: make sure gzip installed on debian based distro
+  apt:
+    name: gzip
+    state: present
+    update_cache: yes
+- name: make sure gzip installed on debian based distro
+  apt:
+    name: tar
+    state: present
+    update_cache: yes

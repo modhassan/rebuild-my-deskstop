@@ -1,0 +1,6 @@
+---
+- name: install openjdk
+  apt:
+    name: "java-{{ jdk_major_version }}-openjdk-headless.x86_64"
+    state: present
+    update_cache: yes

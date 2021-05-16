@@ -1,0 +1,5 @@
+---
+- name: Download OpenJDK
+  get_url:
+    url: "{{openjdk_download_url}}"
+    dest: "{{java_archive}}"
