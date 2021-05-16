@@ -6,9 +6,9 @@
     executable: /bin/bash
 
 - name: Configure the Oracle APT key
-  apt_key:
-    url: "http://download.virtualbox.org/virtualbox/debian/oracle_vbox_2016.asc"
-    state: present
+  shell: 'wget -q https://www.virtualbox.org/download/oracle_vbox_2016.asc -O- | sudo apt-key add -'
+  args:
+    executable: /bin/bash
 
 - name: Configure the VirtualBox APT repositories
   apt_repository:
