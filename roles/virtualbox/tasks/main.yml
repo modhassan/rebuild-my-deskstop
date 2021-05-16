@@ -1,10 +1,23 @@
 ---
+- name: Execute command to get code_name on Hosts
+  shell: 'lsb_release -s -c'
+  register: code_name
+  args:
+    executable: /bin/bash
 
 - name: Configure the Oracle APT key
-  apt_key: url=https://www.virtualbox.org/download/oracle_vbox.asc state=present
+  apt_key:
+    url: "https://www.virtualbox.org/download/oracle_vbox.asc"
+    state: present
 
 - name: Configure the VirtualBox APT repositories
-  apt_repository: repo="deb [arch=amd64] https://download.virtualbox.org/virtualbox/debian {{ ansible_distribution_release }} contrib" state=present
+  apt_repository:
+    repo: "deb [arch=amd64] https://download.virtualbox.org/virtualbox/debian {{ code_name.stdout }} contrib"
+    state: present
+    filename: 'vbox'
 
 - name: Install VirtualBox {{ virtualbox.version }}
-  apt: pkg=virtualbox-{{ virtualbox.version }} state=present
+  apt:
+    name: virtualbox-{{ virtualbox.version }}
+    state: present
+    update_cache: yes
